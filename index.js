@@ -4,7 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var request = require('request');
 
-require("dotenv").config();
+// require("dotenv").config();
 
 app.use(bodyParser.json());
 
