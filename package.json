@@ -11,6 +11,8 @@
     "dotenv": "^8.2.0",
     "ejs": "2.3.3",
     "express": "4.13.3",
+    "moment-timezone": "^0.5.33",
+    "node-fetch": "^2.6.1",
     "request": "2.71.0"
   },
   "engines": {
