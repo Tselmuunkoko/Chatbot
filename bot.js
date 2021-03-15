@@ -3,7 +3,6 @@ const { FbViewHelper } = require('./bot/fbViewHelper');
 const { GraphdbHelper } = require('./bot/GraphdbHelper');
 const questionHelper = new QuestionUnderstanding();
 const viewHelper = new FbViewHelper();
-// const { text } = require('body-parser');
 const dbHelper = new GraphdbHelper();
 
 async function botRun(textMessage){
@@ -28,7 +27,7 @@ async function botRun(textMessage){
         var results = queryResults.results.bindings;
         console.log(questionType);
         if(questionType == 1){
-            // await context.sendActivity(viewHelper.createEmptyRoom(results));
+            return viewHelper.emptyRooms(results);
         }
         else if(questionType == 2){
             // return viewHelper.sendListofFacultyMember();
@@ -36,15 +35,12 @@ async function botRun(textMessage){
         }
         else if(questionType == 3){   
             return viewHelper.sendListofFacultyMembers(results);
-            // if (!(queryResults===undefined) || queryResults !='Error'){
-            // sendTextMessage(sender,viewHelper.sendListofFacultyMember());
-            // }
         }
         else if(questionType == 4){
-            // await context.sendActivity(viewHelper.createSuggestedActionsForFacultyMember(results[0]));
+            return viewHelper.sendDetailsOfFacultyMember(results[0]);
         }
         else if(questionType == 5){
-            // await context.sendActivity(viewHelper.createListForCourse(results));
+            return viewHelper.courseList(results);
         }
         else if(questionType == 6){
             // await context.sendActivity(viewHelper.createSchedule(results));
