@@ -147,7 +147,90 @@ class FbViewHelper{
       return messageData;
     }
     //6 hicheeliin tsagiin huwaari
-    
+    scheduleList(lessons){
+      var tempArray = [];
+      for(var i=0; i<lessons.length; i++){
+          var temp = lessons[i];    
+          if(temp.type.value=="Даваа"){
+              tempArray.push(1);
+          }
+          if(temp.type.value=="Мягмар"){
+              tempArray.push(2);
+          }
+          if(temp.type.value=="Лхагва"){
+              tempArray.push(3);
+          }
+          if(temp.type.value=="Пүрэв"){
+              tempArray.push(4);
+          }
+          if(temp.type.value=="Баасан"){
+              tempArray.push(5);
+          }
+          if(temp.type.value=="Бямба"){
+              tempArray.push(6);
+          }
+          if(temp.type.value=="Ням"){
+              tempArray.push(7);
+          }
+      }
+      
+      let bubbleSort = (inputArr,body) => {
+          let len = inputArr.length;
+          for (let i = 0; i < len; i++) {
+              for (let j = 0; j < len; j++) {
+                  if (inputArr[j] > inputArr[j + 1]) {
+                      let tmp = inputArr[j];
+                      let nicetemp = body[j];
+                      inputArr[j] = inputArr[j + 1];
+                      body[j]=body[j+1];
+                      inputArr[j + 1] = tmp;
+                      body[j+1]=nicetemp;
+
+                  }
+              }
+          }
+          return body;
+      };
+      
+      bubbleSort(tempArray,lessons);
+
+      var it = 0;
+      var elements=[];
+        for (var i=0; i<rooms.length; i++){ 
+          it++;
+          if(it>10) break;
+          var instance = rooms[i];
+          elements.push({
+            "title":instance.department.value+" "+instance.label1.value,
+            "subtitle":instance.termType.value,
+            "buttons":[
+              {
+                "type":"postback",
+                "title":"Дэлгэрэнгүй",
+                "payload":instance.department.value+"-"+instance.label1.value+" өрөөний дэлгэрэнгүй" 
+              }
+            ]
+          });
+      }
+      var  messageData = {
+        "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"generic",
+          "elements":elements
+            }
+          },
+          "quick_replies":[
+            {
+              "content_type":"text",
+              "title":"Дараагийнх",
+              "payload":"<POSTBACK_PAYLOAD>"
+            }
+          ]
+        }
+    return messageData;
+
+    }
     //7 uruunii delgerengui
     //8 hicheeliig hen zaadag we
     //9 ene uliral orj bui hicheeluud
