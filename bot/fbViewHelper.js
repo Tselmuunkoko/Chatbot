@@ -81,28 +81,41 @@ class FbViewHelper{
     }
     // 4  gej hen be email
     sendDetailsOfFacultyMember(member){
-      var roominfo;
-      if (!(member.room1 === undefined)) {
-        var tokens = member.room1.value.split("/");
-        roominfo = "*Өрөө*: "+decodeURIComponent(tokens[4])+"\n";
-      }
       var messageData = {
-        "text": "*"+member.familyName.value+" "+member.givenName.value+"*\n"+
-                "*Албан тушаал*: "+member.job.value+" \n"+
-                "*Нэгж*: "+member.department.value+" \n"+
-                "*Мэйл*: "+ member.email.value+"\n"+
-                "*Өрөө*: "+(!(member.room1 === undefined)?
-                decodeURIComponent(member.room1.value.split("/")):
-                "мэдээлэл байхгүй"),
+        "attachment":{
+          "type":"template",
+          "payload":{
+            "template_type":"button",
+            "text": "*"+member.familyName.value+" "+member.givenName.value+"*\n"+
+                  "*Албан тушаал*: "+member.job.value+" \n"+
+                  "*Нэгж*: "+member.department.value+" \n"+
+                  "*Мэйл*: "+ member.email.value+"\n"+
+                  "*Өрөө*: "+(!(member.room1 === undefined)?
+                  decodeURIComponent(member.room1.value.split("/")):
+                  "мэдээлэл байхгүй"),
+            "buttons":[
+              {
+                "type":"postback",
+                "title":"Судалгааны чиглэл",
+                "payload":member.email.value+"-н судалгааны чиглэлүүд?"
+              },
+              {
+                "type":"postback",
+                "title":"Ажиллаж буй төслүүд",
+                "payload":member.givenName.value+ "." +member.department.value+"-н ажиллаж буй төслүүд?"
+              }
+            ]
+          }
+        },
         "quick_replies":[
           {
             "content_type":"text",
             "title":"Судалгааны чиглэл",
-            "payload":"<POSTBACK_PAYLOAD>"
+            "payload":member.email.value+"-н судалгааны чиглэлүүд?"
           },{
             "content_type":"text",
             "title":"Ажиллаж буй төслүүд",
-            "payload":"<POSTBACK_PAYLOAD>"
+            "payload":member.givenName.value+ "." +member.department.value+"-н ажиллаж буй төслүүд?"
           }
         ]
       }
@@ -117,13 +130,14 @@ class FbViewHelper{
           if(it>10) break;
           var instance = courses[i];
           elements.push({
-            "title":instance.courseName.value,
-            "subtitle":instance.depLabel.value +"  "+ instance.courseCredit.value + " Багц цаг",
+            "title":instance.courseName?instance.courseName.value:instance.CourseName.value,
+            "subtitle":instance.depLabel?instance.depLabel.value:instance.Department.value
+             +"  "+ instance.courseCredit.value + " Багц цаг",
             "buttons":[
               {
                 "type":"postback",
                 "title":"Дэлгэрэнгүй",
-                "payload": instance.courseName.value +" хичээлийн дэлгэрэнгүй мэдээлэл?"
+                "payload": instance.courseName?instance.courseName.value:instance.CourseName.value+" хичээлийн дэлгэрэнгүй мэдээлэл?"
               }
             ]
           });
@@ -232,10 +246,110 @@ class FbViewHelper{
 
     }
     //7 uruunii delgerengui
-    //8 hicheeliig hen zaadag we
-    //9 ene uliral orj bui hicheeluud
-    //10 tusul
-    //11 sudalgaa
-    //12 tusliin delgerengui
+    roomDetails(room){
+      var messageData = {
+        "text": "*"+ room.type.value+" "+room.number.value + "*\n"+
+                "*Харьяалагдах тэнхим*: "+room.dep.value+" \n"+
+                "*Суудлын тоо*: "+room.seat.value+" \n"+
+                "*Проектор*: "+ room.val.value+"\n"+
+                "*Байр*: "+room.build.value
+      }
+      return messageData;
+    }
+    //8 hicheeliin delgerengui 
+    courseDetails(course){
+
+      var messageData = {
+        "text": "*"+course.courseName.value+" "+course.courseCredit.value+"*\n"+
+                "*Сургалтын түвшин*: "+course.courseDegree.value+" \n"+
+                "*Харьяалагдах тэнхим*: "+course.depLabel.value+" \n\n"+
+                "*Товч агуулга*: "+course.courseDescrip.value+"\n",
+        "quick_replies":[
+          {
+            "content_type":"text",
+            "title":"Багш",
+            "payload":course.courseName.value +" хичээлийг хэн заадаг бэ?"
+          },{
+            "content_type":"text",
+            "title":"Хуваарь",
+            "payload":course.courseName.value +" хичээлийн цагийн хуваарь?"
+          }
+        ]
+        // "buttons":[
+        //   {
+        //     "type":"postback",
+        //     "title":"Багш",
+        //     "payload":course.courseName.value +" хичээлийг хэн заадаг бэ?"
+        //   },
+        //   {
+        //     "type":"postback",
+        //     "title":"Хуваарь",
+        //     "payload":course.courseName.value +" хичээлийн цагийн хуваарь?"
+        //   }
+        // ]
+      }
+      return messageData;
+    }
+    //9 hicheeliig hen zaadag we
+    //send same card members
+    //10 ene uliral orj bui hicheeluud
+    //send same cards courses
+
+    //11 tusul
+    projectList(projects){
+      var it = 0;
+      var elements=[];
+        for (var i=0; i<projects.length; i++){ 
+          it++;
+          if(it>10) break;
+          var instance = roprojectsoms[i];
+          elements.push({
+            "title":instance.ProjectName.value,
+            "subtitle":instance.Period.value,
+            "buttons":[
+              {
+                "type":"postback",
+                "title":"Дэлгэрэнгүй",
+                "payload":instance.ProjectName.value+" төслийн дэлгэрэнгүй мэдээлэл?"
+              }
+            ]
+          });
+      }
+      var  messageData = {
+        "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"generic",
+          "elements":elements
+            }
+          },
+          "quick_replies":[
+            {
+              "content_type":"text",
+              "title":"Дараагийнх",
+              "payload":"<POSTBACK_PAYLOAD>"
+            }
+          ]
+        }
+    return messageData;
+    }
+    //12 sudalgaa
+
+    //13 tusliin delgerengui
+    projectDetails(project){
+
+      var messageData = {
+        "text": "*"+project.ProjectName.value+"*\n"+
+                "*Төслийн үндсэн төрөл*: "+project.MainType.value+" \n"+
+                "*Төслийн төрөл*: "+project.projectType.value+" \n"+
+                "*Харьяалах байгууллага*: "+project.Organ.value+" \n"+
+                "*Харьяа тэнхим*: "+project.Depar.value+" \n"+ 
+                "*Санхүүжүүлэгч байгууллага*: "+project.FundingOrgan.value+" \n"+
+                "*Төслийн удирдагч*: "+project.ProjectManager.value+" \n"+
+                "*Хэрэгжих хугацаа*: "+project.Period.value+" \n"+
+                "*Санхүүжүүлэлтийн дүн*: "+project.FundingAmount.value
+      }
+      return messageData;
+    }
 }
 module.exports.FbViewHelper = FbViewHelper;

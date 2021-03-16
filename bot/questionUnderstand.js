@@ -17,7 +17,7 @@ class QuestionUnderstanding {
         if(text.search("хичээлийн цагийн хуваарь")!=-1) return 6;
         if(text.search("өрөөний дэлгэрэнгүй")!=-1) return 7;
         if(text.search("хичээлийн дэлгэрэнгүй мэдээлэл?") != -1) return 8;
-        if(text.search(" хичээлийг хэн заадаг бэ?") != -1) return 9;
+        if(text.search("хичээлийг хэн заадаг бэ?") != -1) return 9;
         if(text.search("-н энэ улиралд орж буй хичээлүүд?")!= -1) return 10;
         if(text.search("-н ажиллаж буй төслүүд?")!= -1) return 11;
         if(text.search("-н судалгааны чиглэлүүд?")!= -1) return 12;

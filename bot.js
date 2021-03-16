@@ -30,8 +30,7 @@ async function botRun(textMessage){
             return viewHelper.emptyRooms(results);
         }
         else if(questionType == 2){
-            // return viewHelper.sendListofFacultyMember();
-            // await context.sendActivity(viewHelper.createLessonRoom(results));
+            return viewHelper.lessonRooms(results);
         }
         else if(questionType == 3){   
             return viewHelper.sendListofFacultyMembers(results);
@@ -46,25 +45,25 @@ async function botRun(textMessage){
             // await context.sendActivity(viewHelper.createSchedule(results));
         }
         else if(questionType == 7){
-            // await context.sendActivity(viewHelper.createRoomInfo(results[0]));
+            return viewHelper.roomDetails(results[0]);
         }  
         else if(questionType == 8){
-            // await context.sendActivity(viewHelper.createCardCourseInfo(results[0]));
+            return viewHelper.courseDetails(results[0]);
         }
         else if(questionType == 9){
-            // await context.sendActivity(viewHelper.createSuggestedActionsForFacultyMembers(results));
+            return viewHelper.sendListofFacultyMembers(results);
         }
         else if(questionType == 10){
-            // await context.sendActivity(viewHelper.createListCardForlessonsByMember(results));
+            return viewHelper.courseList(results);
         } 
         else if(questionType == 11){
-            // await context.sendActivity(viewHelper.createListCardForProjectByName(results));
+            return viewHelper.projectList(results);
         } 
         else if(questionType == 12){
             // await context.sendActivity(viewHelper.createProfileHeroCardForFacultyMember(results[0]));
         }
         else if(questionType == 13){
-            // await context.sendActivity(viewHelper.createCardProjectInfo(results[0]));
+            return viewHelper.projectDetails(results[0]);
         }
     }
 }
