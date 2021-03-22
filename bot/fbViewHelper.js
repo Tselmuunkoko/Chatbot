@@ -106,18 +106,18 @@ class FbViewHelper{
               }
             ]
           }
-        },
-        "quick_replies":[
-          {
-            "content_type":"text",
-            "title":"Судалгааны чиглэл",
-            "payload":member.email.value+"-н судалгааны чиглэлүүд?"
-          },{
-            "content_type":"text",
-            "title":"Ажиллаж буй төслүүд",
-            "payload":member.givenName.value+ "." +member.department.value+"-н ажиллаж буй төслүүд?"
-          }
-        ]
+        }
+        // "quick_replies":[
+        //   {
+        //     "content_type":"text",
+        //     "title":"Эхний Quick reply",
+        //     "payload":member.email.value+"-н судалгааны чиглэлүүд?"
+        //   },{
+        //     "content_type":"text",
+        //     "title":"Хоёр дах quick reply",
+        //     "payload":member.givenName.value+ "." +member.department.value+"-н ажиллаж буй төслүүд?"
+        //   }
+        // ]
       }
       return messageData;
     }
@@ -149,14 +149,14 @@ class FbViewHelper{
             "template_type":"generic",
             "elements":elements
           }
-        },
-        "quick_replies":[
-          {
-            "content_type":"text",
-            "title":"Дараагийнх",
-            "payload":"<POSTBACK_PAYLOAD>"
-          }
-        ]
+        }
+        // "quick_replies":[
+        //   {
+        //     "content_type":"text",
+        //     "title":"Дараагийнх",
+        //     "payload":"<POSTBACK_PAYLOAD>"
+        //   }
+        // ]
       }
       return messageData;
     }

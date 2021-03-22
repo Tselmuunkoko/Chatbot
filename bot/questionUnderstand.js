@@ -23,6 +23,7 @@ class QuestionUnderstanding {
         if(text.search("-н судалгааны чиглэлүүд?")!= -1) return 12;
         if(text.search("төслийн дэлгэрэнгүй мэдээлэл?")!= -1) return 13;
         if(text.search("Тусламж")!=-1) return 911;
+        if(text.search("welcome text")!=-1) return 0;
         else return -1;
     }
     

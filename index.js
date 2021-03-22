@@ -32,7 +32,7 @@ app.post('/webhook/', function (req, res) {
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i];
         sender = event.sender.id;
-        console.log(sender);
+        // console.log(sender);
         if (event.message) {
             if(event.message.text &&(!event.message.quick_reply)){
                 console.log(event.message.text);
