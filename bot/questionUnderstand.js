@@ -9,6 +9,7 @@ class QuestionUnderstanding {
      * @param {String} text -- String of question asked by user
      */
     getTypeOfQuestion(text) {
+        if(text.search("nextTenofLastQuestiontgeedgoynuutsug")!=-1) return "prev";
         if(text.search("сул өрөө")!=-1 || text.search("хоосон өрөө")!=-1) return 1;
         if(text.search("хичээл хаана орж байна вэ?")!=-1) return 2;
         if(text.search("гэж хэн бэ?") != -1 && text.search("@") == -1 ) return 3;

@@ -1,7 +1,7 @@
 {
-  "name": "facebook-messenger-bot-webhook",
+  "name": "Num assistant bot",
   "version": "0.1.0",
-  "description": "A sample Facebook Messenger Bot Webhook Listener",
+  "description": "Num assistant bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -13,6 +13,7 @@
     "express": "4.13.3",
     "moment-timezone": "^0.5.33",
     "node-fetch": "^2.6.1",
+    "pug": "^3.0.2",
     "request": "2.71.0"
   },
   "engines": {

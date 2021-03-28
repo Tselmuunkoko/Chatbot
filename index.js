@@ -1,19 +1,28 @@
 
 var express = require('express');
 var app = express();
+var path = require('path');
 var bodyParser = require('body-parser');
 var request = require('request');
-const { botRun } = require('./bot');
-
+const { Bot } = require('./bot');
+const botka = new Bot();
+var templateRouter = require('./routes/templateGen');
 
 require("dotenv").config();
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 app.use(bodyParser.json());
+app.use('/template',templateRouter);
 
 app.set('port', (process.env.PORT || 5000));
 app.set('verify_token', (process.env.VERIFY_TOKEN || 'TEST'));
 app.set('page_access_token', (process.env.PAGE_ACCESS_TOKEN || 'NULL'));
 app.get('/', function (req, res) {
+        console.log(req);
         res.send('It Works! Follow FB Instructions to activate.');
 });
 
@@ -25,56 +34,17 @@ app.get('/webhook', function (req, res) {
     }
 });
 
-
-
 app.post('/webhook/', function (req, res) {
     messaging_events = req.body.entry[0].messaging;
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i];
         sender = event.sender.id;
         // console.log(sender);
-        if (event.message) {
-            if(event.message.text &&(!event.message.quick_reply)){
-                console.log(event.message.text);
-                receiverFunction(event.message.text);  // text message & quick reply
-            }
-            else if(event.message.quick_reply){
-                console.log(event.message.quick_reply.payload);
-                receiverFunction(event.message.quick_reply.payload);
-            }
-            
-        }
-        else if(event.postback){
-            console.log(event.postback);
-            receiverFunction(event.postback.payload); //postback
-        }
+        botka.Run(sender,event);
     }
     res.sendStatus(200);
 });
-async function receiverFunction(text){ // text[] // attachment[] // type 
-    var resultMessage =  await botRun(text);
-    console.log(resultMessage);
-    // getStartButtonSet();
-    // oneTimePersistant(sender);
-    sendTextMessage(sender,resultMessage);
-}
-function sendTextMessage(sender, messageData) {
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:app.get('page_access_token')},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-    });
-}
+
 function oneTimePersistant(sender){
     request({
         url: 'https://graph.facebook.com/v10.0/me/custom_user_settings',

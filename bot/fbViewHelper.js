@@ -1,14 +1,29 @@
 class FbViewHelper{
     // 1 hooson angi
-    emptyRooms(rooms){
-      var it = 0;
+    emptyRooms(rooms,range){
+      var messageData = [];
       var elements=[];
-        for (var i=0; i<rooms.length; i++){ 
-          it++;
-          if(it>10) break;
+      var quicker = true;
+      if(rooms.length==0){
+        var TextData={
+          "text":"Сул өрөө олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(rooms.length>0 && range==0){
+        var TextData = {
+          "text":rooms.length+" сул өрөө олдлоо."
+        }
+        messageData.push(TextData);
+      }
+        for (var i=range; i<rooms.length; i++){ 
+          if(i>=range+10){ 
+            quicker = false;
+            break;
+          }
           var instance = rooms[i];
           elements.push({
-            "title":instance.department.value+" "+instance.label1.value,
+            "title":instance.department.value+"-"+instance.label1.value,
             "subtitle":instance.termType.value,
             "buttons":[
               {
@@ -19,38 +34,57 @@ class FbViewHelper{
             ]
           });
       }
-      var  messageData = {
+      var  messageAttachment = {
           "attachment":{
           "type":"template",
           "payload":{
             "template_type":"generic",
             "elements":elements
           }
-        },
-        "quick_replies":[
+        }
+      }
+      if(quicker == false){
+        messageAttachment["quick_replies"]=[
           {
             "content_type":"text",
             "title":"Дараагийнх",
-            "payload":"<POSTBACK_PAYLOAD>"
+            "payload":"nextTenofLastQuestiontgeedgoynuutsug"
           }
-        ]
+        ];
       }
+      messageData.push(messageAttachment);
+      console.log(messageData);
       return messageData;
     }
     // 2 hicheeliin uruu
-    lessonRooms(rooms){
-      return this.emptyRooms(rooms);
+    lessonRooms(rooms,range){
+      return this.emptyRooms(rooms,range);
     }
     //3 gej hen be?
-    sendListofFacultyMembers(members){
-      var it  = 0;
+    sendListofFacultyMembers(members,range){
+      var messageData = [];
+      if(members.length==0){
+        var TextData = {
+          text:"Ийм нэртэй ажилтан олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(members.length>0&&range==0){
+        var TextData ={
+          text:"Нийт "+members.length+" ажилтан олдлоо."
+        }
+        messageData.push(TextData);
+      }
       var elements= [];
+      var quicker = true;
       for (var i=0; i<members.length; i++){
         var instance = members[i];       
         if (instance.email === undefined)      
             continue; 
-        it++;
-        if(it>10) break;
+        if(i>=range+10){ 
+          quicker = false;
+          break;
+        }
         elements.push({
             "title":instance.familyName.value+" "+instance.givenName.value,
             "subtitle":instance.department.value,
@@ -68,7 +102,7 @@ class FbViewHelper{
             ]
         });
     }
-        var messageData ={
+        var messageAttachment = {
           "attachment":{
             "type":"template",
             "payload":{
@@ -77,6 +111,16 @@ class FbViewHelper{
             }
           }
         }
+        if(quicker == false){
+          messageAttachment["quick_replies"]=[
+            {
+              "content_type":"text",
+              "title":"Дараагийнх",
+              "payload":"nextTenofLastQuestiontgeedgoynuutsug"
+            }
+          ];
+        }
+        messageData.push(messageAttachment);
         return messageData;
     }
     // 4  gej hen be email
@@ -107,27 +151,32 @@ class FbViewHelper{
             ]
           }
         }
-        // "quick_replies":[
-        //   {
-        //     "content_type":"text",
-        //     "title":"Эхний Quick reply",
-        //     "payload":member.email.value+"-н судалгааны чиглэлүүд?"
-        //   },{
-        //     "content_type":"text",
-        //     "title":"Хоёр дах quick reply",
-        //     "payload":member.givenName.value+ "." +member.department.value+"-н ажиллаж буй төслүүд?"
-        //   }
-        // ]
       }
       return messageData;
     }
     // 5 gej ymar hicheel we
-    courseList(courses){
-      var it = 0;
-      var elements=[];
+    courseList(courses,range){
+
+      var messageData = [];
+      if(courses.length==0){
+        var TextData = {
+          text:"Ийм нэртэй хичээл олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(courses.length>0&&range==0){
+        var TextData ={
+          text:"Нийт "+courses.length+" хичээл олдлоо."
+        }
+        messageData.push(TextData);
+      }
+      var elements= [];
+      var quicker = true;
         for (var i=0; i<courses.length; i++){ 
-          it++;
-          if(it>10) break;
+          if(i>=range+10){ 
+            quicker = false;
+            break;
+          }
           var instance = courses[i];
           elements.push({
             "title":instance.courseName?instance.courseName.value:instance.CourseName.value,
@@ -142,7 +191,7 @@ class FbViewHelper{
             ]
           });
       }
-      var  messageData = {
+      var  messageAttachment = {
           "attachment":{
           "type":"template",
           "payload":{
@@ -150,14 +199,17 @@ class FbViewHelper{
             "elements":elements
           }
         }
-        // "quick_replies":[
-        //   {
-        //     "content_type":"text",
-        //     "title":"Дараагийнх",
-        //     "payload":"<POSTBACK_PAYLOAD>"
-        //   }
-        // ]
       }
+      if(quicker == false){
+        messageAttachment["quick_replies"]=[
+          {
+            "content_type":"text",
+            "title":"Дараагийнх",
+            "payload":"nextTenofLastQuestiontgeedgoynuutsug"
+          }
+        ];
+      }
+      messageData.push(messageAttachment);
       return messageData;
     }
     //6 hicheeliin tsagiin huwaari
@@ -275,33 +327,31 @@ class FbViewHelper{
             "payload":course.courseName.value +" хичээлийн цагийн хуваарь?"
           }
         ]
-        // "buttons":[
-        //   {
-        //     "type":"postback",
-        //     "title":"Багш",
-        //     "payload":course.courseName.value +" хичээлийг хэн заадаг бэ?"
-        //   },
-        //   {
-        //     "type":"postback",
-        //     "title":"Хуваарь",
-        //     "payload":course.courseName.value +" хичээлийн цагийн хуваарь?"
-        //   }
-        // ]
       }
       return messageData;
     }
-    //9 hicheeliig hen zaadag we
-    //send same card members
-    //10 ene uliral orj bui hicheeluud
-    //send same cards courses
-
     //11 tusul
-    projectList(projects){
-      var it = 0;
-      var elements=[];
+    projectList(projects,range){
+      var messageData = [];
+      if(projects.length==0){
+        var TextData = {
+          text:"Ийм нэртэй төсөл олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(projects.length>0&&range==0){
+        var TextData ={
+          text:"Нийт "+projects.length+" хичээл олдлоо."
+        }
+        messageData.push(TextData);
+      }
+      var elements= [];
+      var quicker = true;
         for (var i=0; i<projects.length; i++){ 
-          it++;
-          if(it>10) break;
+          if(i>=range+10){ 
+            quicker = false;
+            break;
+          }
           var instance = roprojectsoms[i];
           elements.push({
             "title":instance.ProjectName.value,
@@ -315,22 +365,25 @@ class FbViewHelper{
             ]
           });
       }
-      var  messageData = {
+      var  messageAttachment = {
         "attachment":{
         "type":"template",
         "payload":{
           "template_type":"generic",
           "elements":elements
             }
-          },
-          "quick_replies":[
+          }
+        }
+        if(quicker == false){
+          messageAttachment["quick_replies"]=[
             {
               "content_type":"text",
               "title":"Дараагийнх",
-              "payload":"<POSTBACK_PAYLOAD>"
+              "payload":"nextTenofLastQuestiontgeedgoynuutsug"
             }
-          ]
+          ];
         }
+    messageData.push(messageAttachment);
     return messageData;
     }
     //12 sudalgaa
