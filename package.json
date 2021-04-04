@@ -1,5 +1,5 @@
 {
-  "name": "Num assistant bot",
+  "name": "numbot",
   "version": "0.1.0",
   "description": "Num assistant bot",
   "main": "index.js",
@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "body-parser": "1.15.0",
+    "canvas": "^2.7.0",
+    "canvas2image": "^1.0.5",
     "dotenv": "^8.2.0",
     "ejs": "2.3.3",
     "express": "4.13.3",

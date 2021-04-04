@@ -6,17 +6,10 @@ var bodyParser = require('body-parser');
 var request = require('request');
 const { Bot } = require('./bot');
 const botka = new Bot();
-var templateRouter = require('./routes/templateGen');
 
 require("dotenv").config();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-app.use(express.static(path.join(__dirname, 'public')));
-
-
 app.use(bodyParser.json());
-app.use('/template',templateRouter);
 
 app.set('port', (process.env.PORT || 5000));
 app.set('verify_token', (process.env.VERIFY_TOKEN || 'TEST'));
@@ -39,7 +32,6 @@ app.post('/webhook/', function (req, res) {
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i];
         sender = event.sender.id;
-        // console.log(sender);
         botka.Run(sender,event);
     }
     res.sendStatus(200);

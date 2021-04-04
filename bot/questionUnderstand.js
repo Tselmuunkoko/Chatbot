@@ -25,6 +25,8 @@ class QuestionUnderstanding {
         if(text.search("төслийн дэлгэрэнгүй мэдээлэл?")!= -1) return 13;
         if(text.search("Тусламж")!=-1) return 911;
         if(text.search("welcome text")!=-1) return 0;
+        if(text.search("-семинар")!=-1) return 14;
+        if(text.search("-лаборатори")!=-1) return 15;
         else return -1;
     }
     
@@ -74,6 +76,12 @@ class QuestionUnderstanding {
         }
         else if(questionType==13){
             return question.substring(0, question.search("төслийн дэлгэрэнгүй мэдээлэл?")).trim();
+        }
+        else if(questionType==14){
+            return question.substring(0, question.search("-семинар")).trim();
+        }
+        else if(questionType==15){
+            return question.substring(0, question.search("-лаборатори")).trim();
         }
         return -1;
     }

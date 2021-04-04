@@ -69,7 +69,7 @@ class GraphdbHelper {
         }
         if(questionType==6){
             console.log(attributes);
-             return util.format(SparqlQueries.CourseSche, encodeURI(attributes));
+            return util.format(SparqlQueries.CourseScheSeminar,encodeURI(attributes),encodeURI("Лекц"));
         }
         if(questionType==7){
             var arr = attributes.split("-");
@@ -94,6 +94,12 @@ class GraphdbHelper {
         }
         if (questionType==13){
             return util.format(SparqlQueries.projectInfo, encodeURI(attributes));
+        }
+        if (questionType==14){
+            return util.format(SparqlQueries.CourseScheSeminar,encodeURI(attributes),encodeURI("Семинар"));
+        }
+        if (questionType==15){
+            return util.format(SparqlQueries.CourseScheSeminar,encodeURI(attributes),encodeURI("Лаборатори"));
         }
         else return '404';
     }

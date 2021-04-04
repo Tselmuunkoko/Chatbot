@@ -10,6 +10,7 @@ require("dotenv").config();
 
 class Bot{
     constructor(){
+        this.state = 0;
         this.lastresult;
         this.range = 0;
         this.prevQuestion;
@@ -35,7 +36,11 @@ class Bot{
             this.sendListMessage(result);
         }
     }
-    sendListMessage(result){   
+    sendListMessage(result){  
+        // this.sendImageMessage(sender,'/home/inuyasha/aizawa.jpg'); 
+        if(!result.length){
+            this.sendTextMessage(this.sender,result);
+        }
         for(var i = 0; i<result.length; i++){
             this.sendTextMessage(this.sender,result[i]);
         }
@@ -113,8 +118,8 @@ class Bot{
             else if(questionType == 5){
                 return viewHelper.courseList(results,this.range);
             }
-            else if(questionType == 6){
-                // await context.sendActivity(viewHelper.createSchedule(results));
+            else if(questionType == 6){ //lecture
+                return viewHelper.scheduleList(results,this.range,0);
             }
             else if(questionType == 7){
                 return viewHelper.roomDetails(results[0]);
@@ -137,6 +142,12 @@ class Bot{
             else if(questionType == 13){
                 return viewHelper.projectDetails(results[0]);
             }
+            else if(questionType == 14){ //lab
+                return viewHelper.scheduleList(results,this.range,1);
+            }
+            else if(questionType == 15){ //seminar
+                return viewHelper.scheduleList(results,this.range,2);
+            }
         }
     }
     sendTextMessage(sender, messageData) {
@@ -156,6 +167,36 @@ class Bot{
             }
         });
     }
+    sendImageMessage(recipientId, file_loc){
+        let fs = require('fs');
+        var readStream = fs.createReadStream(file_loc);
+        var messageData = {
+            recipient : {
+                id : recipientId
+            },
+            message : {
+                attachment : {
+                    type : "image",
+                    payload :{}
+                }
+            },
+            filedata:readStream
+        }
+        this.callSendAPI(messageData);
+    }
+    
+    callSendAPI(messageData) {
+        var endpoint = "https://graph.facebook.com/v2.6/me/messages?access_token=" + process.env.PAGE_ACCESS_TOKEN;
+        var r = request.post(endpoint, function(err, httpResponse, body) {
+            if (err) {return console.error("upload failed >> \n", err)};
+            console.log("upload successfull >> \n", body); //facebook always return 'ok' message, so you need to read error in 'body.error' if any
+        });
+        var form = r.form();
+        form.append('recipient', JSON.stringify(messageData.recipient));
+        form.append('message', JSON.stringify(messageData.message));
+        form.append('filedata', messageData.filedata); //no need to stringify!
+    }
+    
 }
     
 module.exports.Bot = Bot;

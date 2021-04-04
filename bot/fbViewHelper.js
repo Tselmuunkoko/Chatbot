@@ -58,7 +58,60 @@ class FbViewHelper{
     }
     // 2 hicheeliin uruu
     lessonRooms(rooms,range){
-      return this.emptyRooms(rooms,range);
+      var messageData = [];
+      var elements=[];
+      var quicker = true;
+      if(rooms.length==0){
+        var TextData={
+          "text":"Энэ хичээл орж байгаа өрөө олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(rooms.length>0 && range==0){
+        var TextData = {
+          "text":rooms.length+" өрөө олдлоо."
+        }
+        messageData.push(TextData);
+      }
+        for (var i=range; i<rooms.length; i++){ 
+          if(i>=range+10){ 
+            quicker = false;
+            break;
+          }
+          var instance = rooms[i];
+          elements.push({
+            "title":instance.department.value+"-"+instance.label1.value,
+            "subtitle":instance.termType.value,
+            "buttons":[
+              {
+                "type":"postback",
+                "title":"Дэлгэрэнгүй",
+                "payload":instance.department.value+"-"+instance.label1.value+" өрөөний дэлгэрэнгүй" 
+              }
+            ]
+          });
+      }
+      var  messageAttachment = {
+          "attachment":{
+          "type":"template",
+          "payload":{
+            "template_type":"generic",
+            "elements":elements
+          }
+        }
+      }
+      if(quicker == false){
+        messageAttachment["quick_replies"]=[
+          {
+            "content_type":"text",
+            "title":"Дараагийнх",
+            "payload":"nextTenofLastQuestiontgeedgoynuutsug"
+          }
+        ];
+      }
+      messageData.push(messageAttachment);
+      console.log(messageData);
+      return messageData;
     }
     //3 gej hen be?
     sendListofFacultyMembers(members,range){
@@ -77,7 +130,7 @@ class FbViewHelper{
       }
       var elements= [];
       var quicker = true;
-      for (var i=0; i<members.length; i++){
+      for (var i=range; i<members.length; i++){
         var instance = members[i];       
         if (instance.email === undefined)      
             continue; 
@@ -172,7 +225,7 @@ class FbViewHelper{
       }
       var elements= [];
       var quicker = true;
-        for (var i=0; i<courses.length; i++){ 
+        for (var i=range; i<courses.length; i++){ 
           if(i>=range+10){ 
             quicker = false;
             break;
@@ -180,13 +233,12 @@ class FbViewHelper{
           var instance = courses[i];
           elements.push({
             "title":instance.courseName?instance.courseName.value:instance.CourseName.value,
-            "subtitle":instance.depLabel?instance.depLabel.value:instance.Department.value
-             +"  "+ instance.courseCredit.value + " Багц цаг",
+            "subtitle":instance.depLabel?instance.depLabel.value:instance.Department.value,
             "buttons":[
               {
                 "type":"postback",
                 "title":"Дэлгэрэнгүй",
-                "payload": instance.courseName?instance.courseName.value:instance.CourseName.value+" хичээлийн дэлгэрэнгүй мэдээлэл?"
+                "payload": instance.courseName?instance.courseName.value+" хичээлийн дэлгэрэнгүй мэдээлэл?":instance.CourseName.value+" хичээлийн дэлгэрэнгүй мэдээлэл?"
               }
             ]
           });
@@ -213,7 +265,7 @@ class FbViewHelper{
       return messageData;
     }
     //6 hicheeliin tsagiin huwaari
-    scheduleList(lessons){
+    scheduleList(lessons,range,type){
       var tempArray = [];
       for(var i=0; i<lessons.length; i++){
           var temp = lessons[i];    
@@ -260,25 +312,53 @@ class FbViewHelper{
       
       bubbleSort(tempArray,lessons);
 
-      var it = 0;
-      var elements=[];
-        for (var i=0; i<rooms.length; i++){ 
-          it++;
-          if(it>10) break;
-          var instance = rooms[i];
+      var messageData = [];
+      if(lessons.length==0){
+        var TextData = {
+          text:"Хичээлийн хуваарь олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(lessons.length>0&&range==0){
+        var TextData;
+        if(type==0){
+          TextData ={
+            text:"Лекцүүд"
+          }
+        }
+        else if(type==1){
+          TextData ={
+            text:"Семинарууд"
+          }
+        }
+        if(type==2){
+          TextData ={
+            text:"Лабораториуд"
+          }
+        }
+        messageData.push(TextData);
+      }
+      var elements= [];
+      var quicker = true;
+        for (var i=range; i<lessons.length; i++){ 
+          if(i>=range+10){ 
+            quicker = false;
+            break;
+          }
+          var instance = lessons[i];
           elements.push({
-            "title":instance.department.value+" "+instance.label1.value,
-            "subtitle":instance.termType.value,
+            "title":instance.type.value+" "+instance.dt1.value,
+            "subtitle":instance.Name.value,
             "buttons":[
               {
                 "type":"postback",
-                "title":"Дэлгэрэнгүй",
+                "title":instance.department.value+"-"+instance.label1.value,
                 "payload":instance.department.value+"-"+instance.label1.value+" өрөөний дэлгэрэнгүй" 
               }
             ]
           });
       }
-      var  messageData = {
+      var  messageAttachment = {
         "attachment":{
         "type":"template",
         "payload":{
@@ -286,16 +366,62 @@ class FbViewHelper{
           "elements":elements
             }
           },
-          "quick_replies":[
+          quick_replies:[
+          ]
+        }
+        if(type==0){
+          messageAttachment.quick_replies.push(
+            {
+              "content_type":"text",
+              "title":"семинар",
+              "payload":lessons[0].courseName.value+"-семинар"
+            },
+            {
+              "content_type":"text",
+              "title":"лаборатори",
+              "payload":lessons[0].courseName.value+"-лаборатори"
+            }
+          )
+        }
+        if(type==1){
+          messageAttachment.quick_replies.push(
+            {
+              "content_type":"text",
+              "title":"лекц",
+              "payload":lessons[0].courseName.value+" хичээлийн цагийн хуваарь"
+            },
+            {
+              "content_type":"text",
+              "title":"лаборатори",
+              "payload":lessons[0].courseName.value+"-лаборатори"
+            }
+          )
+        }
+        if(type==2){
+          messageAttachment.quick_replies.push(
+            {
+              "content_type":"text",
+              "title":"семинар",
+              "payload":lessons[0].courseName.value+"-семинар"
+            },
+            {
+              "content_type":"text",
+              "title":"лекц",
+              "payload":lessons[0].courseName.value+" хичээлийн цагийн хуваарь"
+            }
+          )
+        }
+        if(quicker == false){
+          messageAttachment.quick_replies.push(
             {
               "content_type":"text",
               "title":"Дараагийнх",
-              "payload":"<POSTBACK_PAYLOAD>"
+              "payload":"nextTenofLastQuestiontgeedgoynuutsug"
             }
-          ]
+          );
         }
+    messageData.push(messageAttachment);
     return messageData;
-
     }
     //7 uruunii delgerengui
     roomDetails(room){
@@ -335,7 +461,7 @@ class FbViewHelper{
       var messageData = [];
       if(projects.length==0){
         var TextData = {
-          text:"Ийм нэртэй төсөл олдсонгүй."
+          text:"Төсөл олдсонгүй."
         }
         return TextData;
       }
@@ -347,7 +473,7 @@ class FbViewHelper{
       }
       var elements= [];
       var quicker = true;
-        for (var i=0; i<projects.length; i++){ 
+        for (var i=range; i<projects.length; i++){ 
           if(i>=range+10){ 
             quicker = false;
             break;
