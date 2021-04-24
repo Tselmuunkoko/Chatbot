@@ -11,7 +11,7 @@ class QuestionUnderstanding {
     getTypeOfQuestion(text) {
         if(text.search("nextTenofLastQuestiontgeedgoynuutsug")!=-1) return "prev";
         if(text.search("сул өрөө")!=-1 || text.search("хоосон өрөө")!=-1) return 1;
-        if(text.search("хичээл хаана орж байна вэ?")!=-1) return 2;
+        if(text.search("хичээл хаана орж байна бэ?")!=-1) return 2;
         if(text.search("гэж хэн бэ?") != -1 && text.search("@") == -1 ) return 3;
         if(text.search("гэж хэн бэ?") != -1 && text.search("@") != -1) return 4;
         if(text.search("гэж ямар хичээл бэ?") != -1) return 5;
@@ -27,6 +27,7 @@ class QuestionUnderstanding {
         if(text.search("welcome text")!=-1) return 0;
         if(text.search("-семинар")!=-1) return 14;
         if(text.search("-лаборатори")!=-1) return 15;
+        if(text.search("-н чиглэлээр хэн судалгаа хийдэг вэ")!=-1) return 16;
         else return -1;
     }
     
@@ -35,8 +36,8 @@ class QuestionUnderstanding {
      * @param {String} question -- String that is a question asked by user
      */
     extractAttributes(questionType, question){
-        if(questionType!=6)
-            question = this.normalizeQuestion(question);
+        // if(questionType!=6)
+        //     question = this.normalizeQuestion(question);
         if(questionType==1){
             return this.findForEmptyRoom(question); 
         }
@@ -83,13 +84,16 @@ class QuestionUnderstanding {
         else if(questionType==15){
             return question.substring(0, question.search("-лаборатори")).trim();
         }
+        else if(questionType==16){
+            return question.substring(0, question.search("-н чиглэлээр хэн судалгаа хийдэг вэ")).trim();
+        }
         return -1;
     }
     
-    normalizeQuestion(question){
-        var ans = question.replace(/вэ?/g, 'бэ?');
-        return ans;
-    }
+    // normalizeQuestion(question){
+    //     var ans = question.replace(/вэ?/g, 'бэ?');
+    //     return ans;
+    // }
     findForEmptyRoom(question){
         if(this.TimeForEmptyRoom(question)!=-1){
             if(this.findRoomKey(question)!=-1){

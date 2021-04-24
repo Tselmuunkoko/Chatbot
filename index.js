@@ -32,6 +32,7 @@ app.post('/webhook/', function (req, res) {
     for (i = 0; i < messaging_events.length; i++) {
         event = req.body.entry[0].messaging[i];
         sender = event.sender.id;
+        // oneTimePersistant(sender);
         botka.Run(sender,event);
     }
     res.sendStatus(200);
@@ -51,18 +52,19 @@ function oneTimePersistant(sender){
                       "call_to_actions": [
                           {
                               "type": "postback",
-                              "title": "Talk to an agent",
-                              "payload": "CARE_HELP"
-                          },
-                          {
-                              "type": "postback",
-                              "title": "Outfit suggestions",
-                              "payload": "CURATION"
+                              "title": "Тусламж",
+                              "payload": "Тусламж"
                           },
                           {
                               "type": "web_url",
-                              "title": "Shop now",
-                              "url": "https://www.originalcoastclothing.com/",
+                              "title": "Sisi",
+                              "url": "https://sisi.num.edu.mn/sisi_v4/modules/login/login.htm",
+                              "webview_height_ratio": "full"
+                          },
+                          {
+                              "type": "web_url",
+                              "title": "МУИС website",
+                              "url": "https://www.num.edu.mn",
                               "webview_height_ratio": "full"
                           }
                       ]

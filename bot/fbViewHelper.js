@@ -132,8 +132,6 @@ class FbViewHelper{
       var quicker = true;
       for (var i=range; i<members.length; i++){
         var instance = members[i];       
-        if (instance.email === undefined)      
-            continue; 
         if(i>=range+10){ 
           quicker = false;
           break;
@@ -145,12 +143,12 @@ class FbViewHelper{
               {
                 "type":"postback",
                 "title":"Хичээлүүд",
-                "payload":instance.email.value+"-н энэ улиралд орж буй хичээлүүд?"
+                "payload":((instance.email)?instance.email.value:"none@")+"-н энэ улиралд орж буй хичээлүүд?"
               },
               {
                 "type":"postback",
                 "title":"Дэлгэрэнгүй",
-                "payload": instance.email.value+" гэж хэн бэ?"
+                "payload": ((instance.email)?instance.email.value:"none@")+" гэж хэн бэ?"
               }
             ]
         });
@@ -178,16 +176,22 @@ class FbViewHelper{
     }
     // 4  gej hen be email
     sendDetailsOfFacultyMember(member){
+      if(member == undefined){
+        var text = {
+          text:"Ажилтны мэдээлэл олдсонгүй"
+        }
+        return text;
+      } 
       var messageData = {
         "attachment":{
           "type":"template",
           "payload":{
             "template_type":"button",
-            "text": "*"+member.familyName.value+" "+member.givenName.value+"*\n"+
-                  "*Албан тушаал*: "+member.job.value+" \n"+
-                  "*Нэгж*: "+member.department.value+" \n"+
-                  "*Мэйл*: "+ member.email.value+"\n"+
-                  "*Өрөө*: "+(!(member.room1 === undefined)?
+            "text": "🧑‍🏫 "+member.familyName.value+" "+member.givenName.value+"\n"+
+                  "💼 Албан тушаал : "+member.job.value+" \n"+
+                  "🏫 Нэгж: "+member.department.value+" \n"+
+                  "📧 Мэйл: "+ member.email.value+"\n"+
+                  "👟  Өрөө: "+(!(member.room1 === undefined)?
                   decodeURIComponent(member.room1.value.split("/")):
                   "мэдээлэл байхгүй"),
             "buttons":[
@@ -199,7 +203,7 @@ class FbViewHelper{
               {
                 "type":"postback",
                 "title":"Ажиллаж буй төслүүд",
-                "payload":member.givenName.value+ "." +member.department.value+"-н ажиллаж буй төслүүд?"
+                "payload":member.familyName.value[0]+ "." +member.givenName.value+"-н ажиллаж буй төслүүд?"
               }
             ]
           }
@@ -425,23 +429,33 @@ class FbViewHelper{
     }
     //7 uruunii delgerengui
     roomDetails(room){
+      if(room==undefined){
+        var messageData = {
+          "text":"Өрөөний дэлгэрэнгүй мэдээлэл олдсонгүй."
+        }
+        return messageData;
+      }
       var messageData = {
-        "text": "*"+ room.type.value+" "+room.number.value + "*\n"+
-                "*Харьяалагдах тэнхим*: "+room.dep.value+" \n"+
-                "*Суудлын тоо*: "+room.seat.value+" \n"+
-                "*Проектор*: "+ room.val.value+"\n"+
-                "*Байр*: "+room.build.value
+        "text": "🎒 "+ room.type.value+" "+room.number.value + "\n"+
+                "🪑 Суудлын тоо: "+room.seat.value+" \n"+
+                "🖥 Проектор: "+ room.val.value+"\n"+
+                "🏫 Байр: "+room.build.value
       }
       return messageData;
     }
     //8 hicheeliin delgerengui 
     courseDetails(course){
-
+      if(course==undefined){
+        var messageData = {
+          "text":"Хичээлийн дэлгэрэнгүй мэдээлэл олдсонгүй."
+        }
+        return messageData;
+      }
       var messageData = {
-        "text": "*"+course.courseName.value+" "+course.courseCredit.value+"*\n"+
-                "*Сургалтын түвшин*: "+course.courseDegree.value+" \n"+
-                "*Харьяалагдах тэнхим*: "+course.depLabel.value+" \n\n"+
-                "*Товч агуулга*: "+course.courseDescrip.value+"\n",
+        "text": "📖 "+course.courseName.value+" "+course.courseCredit.value+"\n"+
+                "🥽 Сургалтын түвшин: "+course.courseDegree.value+" \n"+
+                "🏫 Харьяалагдах тэнхим: "+course.depLabel.value+" \n\n"+
+                "📝 Товч агуулга: "+course.courseDescrip.value+"\n",
         "quick_replies":[
           {
             "content_type":"text",
@@ -467,7 +481,7 @@ class FbViewHelper{
       }
       else if(projects.length>0&&range==0){
         var TextData ={
-          text:"Нийт "+projects.length+" хичээл олдлоо."
+          text:"Нийт "+projects.length+" төсөл олдлоо."
         }
         messageData.push(TextData);
       }
@@ -478,15 +492,15 @@ class FbViewHelper{
             quicker = false;
             break;
           }
-          var instance = roprojectsoms[i];
+          var instance = projects[i];
           elements.push({
             "title":instance.ProjectName.value,
-            "subtitle":instance.Period.value,
+            "subtitle":instance.date.value,
             "buttons":[
               {
                 "type":"postback",
                 "title":"Дэлгэрэнгүй",
-                "payload":instance.ProjectName.value+" төслийн дэлгэрэнгүй мэдээлэл?"
+                "payload":instance.Project.value+" төслийн дэлгэрэнгүй мэдээлэл?"
               }
             ]
           });
@@ -513,20 +527,71 @@ class FbViewHelper{
     return messageData;
     }
     //12 sudalgaa
-
+    researchList(researchs,range){
+      var messageData = [];
+      if(researchs.length==0){
+        var TextData = {
+          text:"Судалгааны чиглэл олдсонгүй."
+        }
+        return TextData;
+      }
+      else if(researchs.length>0&&range==0){
+        var TextData ={
+          text:"Нийт "+researchs.length+" судалгааны чиглэл олдлоо."
+        }
+        messageData.push(TextData);
+      }
+      var elements= [];
+      var quicker = true;
+        for (var i=range; i<researchs.length; i++){ 
+          if(i>=range+10){ 
+            quicker = false;
+            break;
+          }
+          var instance = researchs[i];
+          elements.push({
+            "title":instance.ResearchName.value,
+            "subtitle":"tap to search",
+            "default_action": {
+              "type": "web_url",
+              "url": "https://www.google.com/search?q="+instance.ResearchName.value,
+              "webview_height_ratio": "tall"
+            },
+          });
+      }
+      var  messageAttachment = {
+        "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"generic",
+          "elements":elements
+            }
+          }
+        }
+        if(quicker == false){
+          messageAttachment["quick_replies"]=[
+            {
+              "content_type":"text",
+              "title":"Дараагийнх",
+              "payload":"nextTenofLastQuestiontgeedgoynuutsug"
+            }
+          ];
+        }
+    messageData.push(messageAttachment);
+    return messageData;
+    }
     //13 tusliin delgerengui
+    // 🎓🥼🥽👓🧳💼🎒👟🧑‍🏫🧑‍🎓🧠✍️🔍🔎📝📌📖📘📗📕📒📔📙🗞📧🏫🔔✅💯
     projectDetails(project){
-
       var messageData = {
-        "text": "*"+project.ProjectName.value+"*\n"+
-                "*Төслийн үндсэн төрөл*: "+project.MainType.value+" \n"+
-                "*Төслийн төрөл*: "+project.projectType.value+" \n"+
-                "*Харьяалах байгууллага*: "+project.Organ.value+" \n"+
-                "*Харьяа тэнхим*: "+project.Depar.value+" \n"+ 
-                "*Санхүүжүүлэгч байгууллага*: "+project.FundingOrgan.value+" \n"+
-                "*Төслийн удирдагч*: "+project.ProjectManager.value+" \n"+
-                "*Хэрэгжих хугацаа*: "+project.Period.value+" \n"+
-                "*Санхүүжүүлэлтийн дүн*: "+project.FundingAmount.value
+        "text": "💼 "+project.ProjectName.value+"\n"+
+                "📌 Төслийн үндсэн төрөл: "+project.category.value+" \n"+
+                "📘 Төслийн төрөл: "+project.type.value+" \n"+
+                "🏫 Харьяа тэнхим: "+project.depName.value+" \n"+ 
+                "🗞 Санхүүжүүлэгч байгууллага: "+project.funforgName.value+" \n"+
+                "🧑‍🏫 Төслийн удирдагч: "+project.PersonName.value+" \n"+
+                "🕖 Хэрэгжих хугацаа: "+project.date.value+" \n"+
+                "🗞 Санхүүжүүлэлтийн дүн /төг: "+project.cost.value
       }
       return messageData;
     }

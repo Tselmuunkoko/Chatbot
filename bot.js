@@ -48,10 +48,11 @@ class Bot{
     async botRun(textMessage){
         var questionType = questionHelper.getTypeOfQuestion(textMessage);
         // console.log(questionType);
+         // 🎓🥼🥽👓🧳💼🎒👟🧑‍🏫🧑‍🎓🧠✍️🔍🔎📝📌📖📘📗📕📒📔📙🗞📧🏫🔔✅💯
         var questionAttributes = questionHelper.extractAttributes(questionType, textMessage);
         if (questionType == 911){
            var messageData = {
-                text:"Боломжит асуултууд \n"+
+                text:"🤗 Боломжит асуултууд 🙃 \n"+
                 "1.  Одоо 3-р байранд сул өрөө байна уу? \n"+
                 '2.  Веб програмчлал хичээл хаана орж байна вэ? \n'+
                 '3.  Амарсанаа (багшийн нэр) гэж хэн бэ? \n'+
@@ -65,9 +66,10 @@ class Bot{
             }
             return messageData;
         } 
+       
         else if(questionType == 0){
             var  messageData = {
-                text:"Сайн байна уу? Би МУИС-ийн нээлттэй өгөгдөл дээр суурьлан доорх асуултуудад хариулт өгж чадна.\n"+
+                text:"🤗 Сайн байна уу? 🙃 Би МУИС-ийн нээлттэй өгөгдөл дээр суурьлан доорх асуултуудад хариулт өгж чадна.\n"+
                 "1.  Одоо 3-р байранд сул өрөө байна уу? \n"+
                 '2.  Веб програмчлал хичээл хаана орж байна вэ? \n'+
                 '3.  Амарсанаа (багшийн нэр) гэж хэн бэ? \n'+
@@ -137,7 +139,7 @@ class Bot{
                 return viewHelper.projectList(results,this.range);
             } 
             else if(questionType == 12){
-                // await context.sendActivity(viewHelper.createProfileHeroCardForFacultyMember(results[0]));
+                return viewHelper.researchList(results,this.range);
             }
             else if(questionType == 13){
                 return viewHelper.projectDetails(results[0]);
@@ -147,6 +149,9 @@ class Bot{
             }
             else if(questionType == 15){ //seminar
                 return viewHelper.scheduleList(results,this.range,2);
+            }
+            else if(questionType == 16){ //hen ene chigleleer sudalgaa hiideg we
+                return viewHelper.sendListofFacultyMembers(results,this.range);
             }
         }
     }

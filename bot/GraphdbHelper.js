@@ -18,7 +18,7 @@ class GraphdbHelper {
             
             var query = this.getQuery(questionType, attributes);
             const host = 'http://localhost:7200';
-            const path = '/repositories/fall2020';
+            const path = '/repositories/spring2021';
             const params = '?query=';
             const url = host + path + params + query;
             
@@ -51,6 +51,8 @@ class GraphdbHelper {
         }
         if(questionType == 2){
             console.log(this.date.format('HH')+":"+this.date.format('mm'));
+            console.log(this.weekday);
+            console.log(attributes);
             return util.format(SparqlQueries.LessonRoom,
                 encodeURI(this.date.format('HH')+":"+this.date.format('mm')),
                 encodeURI(this.date.format('HH')+":"+this.date.format('mm')),
@@ -86,20 +88,24 @@ class GraphdbHelper {
             return util.format(SparqlQueries.lessonsByMember, encodeURI(attributes));
         }
         if (questionType==11){
-            var arr = attributes.split(".");
-            return util.format(SparqlQueries.projectByName, encodeURI(arr[0]),encodeURI(arr[1]));    
+            console.log(attributes);
+            return util.format(SparqlQueries.tusulbyMember, encodeURI(attributes));    
         }
         if (questionType==12){
-            return util.format(SparqlQueries.membersByEmail, encodeURI(attributes));
+            return util.format(SparqlQueries.researchbyEmail, encodeURI(attributes));
         }
         if (questionType==13){
-            return util.format(SparqlQueries.projectInfo, encodeURI(attributes));
+            console.log(attributes);
+            return util.format(SparqlQueries.tusulbyUri, encodeURI(attributes));
         }
         if (questionType==14){
             return util.format(SparqlQueries.CourseScheSeminar,encodeURI(attributes),encodeURI("Семинар"));
         }
         if (questionType==15){
             return util.format(SparqlQueries.CourseScheSeminar,encodeURI(attributes),encodeURI("Лаборатори"));
+        }
+        if(questionType==16){
+            return util.format(SparqlQueries.memberByResearch,encodeURI(attributes));
         }
         else return '404';
     }
