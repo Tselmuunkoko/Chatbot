@@ -11,7 +11,7 @@ class QuestionUnderstanding {
     getTypeOfQuestion(text) {
         if(text.search("nextTenofLastQuestiontgeedgoynuutsug")!=-1) return "prev";
         if(text.search("сул өрөө")!=-1 || text.search("хоосон өрөө")!=-1) return 1;
-        if(text.search("хичээл хаана орж байна бэ?")!=-1) return 2;
+        if(text.search("хичээл хаана орж байна")!=-1) return 2;
         if(text.search("гэж хэн бэ?") != -1 && text.search("@") == -1 ) return 3;
         if(text.search("гэж хэн бэ?") != -1 && text.search("@") != -1) return 4;
         if(text.search("гэж ямар хичээл бэ?") != -1) return 5;
@@ -42,7 +42,7 @@ class QuestionUnderstanding {
             return this.findForEmptyRoom(question); 
         }
         else if(questionType==2){
-            return question.substring(0, question.search("хичээл хаана орж байна бэ?")).trim();  
+            return question.substring(0, question.search("хичээл хаана орж байна")).trim();  
         } 
         else if(questionType==3){
             return question.substring(0, question.search("гэж хэн бэ?")).trim();    
@@ -132,6 +132,12 @@ class QuestionUnderstanding {
         }
         if(question.search("3-р байр")!=-1){
             return "Хичээлийн байр 3";
+        }
+        if(question.search("3А-р байр")!=-1){
+            return "Хичээлийн байр 3А";
+        }
+        if(question.search("3Б-р байр")!=-1){
+            return "Хичээлийн байр 3Б";
         }
         if(question.search("4-р байр")!=-1){
             return "Хичээлийн байр 4";

@@ -203,7 +203,7 @@ class FbViewHelper{
               {
                 "type":"postback",
                 "title":"Ажиллаж буй төслүүд",
-                "payload":member.familyName.value[0]+ "." +member.givenName.value+"-н ажиллаж буй төслүүд?"
+                "payload":member.givenName.value+"-н ажиллаж буй төслүүд?"
               }
             ]
           }
